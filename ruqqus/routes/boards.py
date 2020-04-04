@@ -1082,4 +1082,14 @@ def siege_guild(v):
         db.commit()
 
     return redirect(f"/+{guild.name}/mod/mods")
-    
+
+
+@app.route("/api/boards_list/<boardname>", methods=["POST"])
+@auth_required
+def board_list(boardname, v):
+    boards = db.query(Board).filter(Board.name.ilike(boardname)).order_by(asc(Board.name)).all()
+    boards_list = []
+    for b in boards:
+        boards_list.append({'name':b.name})
+
+    return jsonify({'guilds':b})
