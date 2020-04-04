@@ -1092,12 +1092,14 @@ def board_list(boardname, v):
     boards = db.query(Board).filter(Board.name.ilike(boardname)).filter_by(is_banned=0)
 
     if not v.over_18:
-    boards=boards.filter_by(over_18=False)
+        boards=boards.filter_by(over_18=False)
+
+    boards = boards.filter_by()
 
 
     boards=boards.order_by(asc(Board.name)).limit(10)
 
 
-    names=[x.name for x in boards]
+    names=[x.name for x in boards if not boards.has_ban(v)]
 
     return jsonify({'names':names})
