@@ -1087,9 +1087,17 @@ def siege_guild(v):
 @app.route("/api/boards_list/<boardname>", methods=["POST"])
 @auth_required
 def board_list(boardname, v):
-    boards = db.query(Board).filter(Board.name.ilike(boardname)).order_by(asc(Board.name)).all()
-    boards_list = []
-    for b in boards:
-        boards_list.append({'name':b.name})
 
-    return jsonify({'guilds':boards_list})
+
+    boards = db.query(Board).filter(Board.name.ilike(boardname)).filter_by(is_banned=0)
+
+    if not v.over_18:
+    boards=boards.filter_by(over_18=False)
+
+
+    boards=boards.order_by(asc(Board.name)).limit(10)
+
+
+    names=[x.name for x in boards]
+
+    return jsonify({'names':names})
