@@ -1092,4 +1092,4 @@ def board_list(boardname, v):
     for b in boards:
         boards_list.append({'name':b.name})
 
-    return jsonify({'guilds':b})
+    return jsonify({'guilds':boards_list})
