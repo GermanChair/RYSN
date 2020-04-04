@@ -122,6 +122,10 @@
 						</div>
 						<label for="board" class="mt-3">Post in guild<i class="fas fa-info-circle text-gray-400 ml-1" data-toggle="tooltip" data-placement="top" title="Guilds are Ruqqus communities. Enter a guild you would like your post to belong to."></i></label>
 						<input class="form-control" name="board" placeholder="+general" value="{{ request.args.get('guild','') }}">
+                        <select name="board">
+                        {% for board in v.subscriptions %}
+                            <option value="{{ board.name }}">{{ board.name }}</option>
+                        </select>
 
 
 						{% if v.admin_level %}
