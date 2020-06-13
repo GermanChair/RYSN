@@ -16,6 +16,7 @@ from flask import *
 from ruqqus.__main__ import app, db, limiter
 from werkzeug.contrib.atom import AtomFeed
 from datetime import datetime
+from ruqqus.helpers.aws import *
 
 @app.route("/comment/<cid>", methods=["GET"])
 def comment_cid(cid):
@@ -256,6 +257,20 @@ def api_comment(v):
               )
 
     db.add(c)
+
+    # check for uploaded image
+    if request.files.get('file'):
+        file = request.files['file']
+        name = f'post/{base36encode(parent_comment_id)}/comment/{c.base36id}'
+
+        upload_file(name, file)
+
+        # update post data
+        c.url = f'https://{BUCKET}/{name}'
+        c.is_image = True
+        c.domain_ref = 1  # id of i.ruqqus.com domain
+        db.add(c)
+
     db.commit()
 
     c.determine_offensive()
